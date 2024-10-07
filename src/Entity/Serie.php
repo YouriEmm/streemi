@@ -18,6 +18,7 @@ class Serie extends Media
 
     public function __construct()
     {
+        parent::__construct();
         $this->seasons = new ArrayCollection();
     }
 
@@ -51,4 +52,18 @@ class Serie extends Media
 
         return $this;
     }
+
+    public function getDuration(): int
+    {
+        $totalDuration = 0;
+
+        foreach ($this->seasons as $season) {
+            foreach ($season->getEpisodes() as $episode) {
+                $totalDuration += $episode->getDuration(); 
+            }
+        }
+
+        return $totalDuration; 
+    }
+    
 }
