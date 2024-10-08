@@ -5,6 +5,7 @@ declare(strict_types= 1);
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\Serie;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,16 +24,35 @@ class MovieController extends AbstractController{
 
     #[Route(path:"movie/{id}")]
     public function detailMovie(Movie $movie){
+
         $comments = $movie->getComments();
+        $casting = $movie->getCasting();
+        $staff = $movie->getStaff();
 
         return $this->render(
             "detail.html.twig",
-            ['movie'=> $movie, 'comments'=> $comments]);
+            [
+                'media'=> $movie,
+                'comments'=> $comments,
+                'castings' => $casting,
+                'staffs'=> $staff
+            ]);
     }
 
-    #[Route(path:"serie/{serieName}")]
-    public function detailSerie(){
-        return $this->render("detail_serie.html.twig");
+    #[Route(path:"serie/{id}")]
+    public function detailSerie(Serie $serie){
+
+        $comments = $serie->getComments();
+        $casting = $serie->getCasting();
+        $staff = $serie->getStaff();
+
+        return $this->render("detail.html.twig",
+        [
+            'media'=> $serie,
+            'comments'=> $comments,
+            'castings' => $casting,
+            'staffs'=> $staff
+        ]);
     }
 
 

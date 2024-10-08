@@ -75,6 +75,21 @@ class AppFixtures extends Fixture
             $movie ->setRealeaseDateAt(new \DateTime());
             $movie ->setDuration(180);
             $movie ->setMediaType(MediaTypeEnum::MOVIE);
+            $movie ->setCoverImage("https://picsum.photos/1920/1080?random={$i}");
+            $movie ->setCasting([
+                ['name' => 'John Doe', 'role' => 'Réalisateur', 'image' => 'https://i.pravatar.cc/150?u=John+Doe'],
+                ['name' => 'Jane Doe', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/150?u=Jane+Doe'],
+                ['name' => 'Foo Bar', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/150?u=Foo+Bar'],
+                ['name' => 'Baz Qux', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/150?u=Baz+Qux'],
+
+            ]);
+            $movie ->setStaff([
+                ['name' => 'Alice Bob', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Alice+Bob'],
+                ['name' => 'Charlie Delta', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Charlie+Delta'],
+                ['name' => 'Eve Fox', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Eve+Fox'],
+                ['name' => 'Grace Hope', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Grace+Hope'],
+                ['name' => 'Ivy Jack', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Ivy+Jack'],
+            ]);
             $movie ->addCategoryMedium($categoryEntities[$i]);
             $movie->addMediaLanguage($languageEntities[$i]); 
             $movieTab[] = $movie;
@@ -83,27 +98,43 @@ class AppFixtures extends Fixture
 
         for ($i = 0; $i < 5; $i++) {
             $serie = new Serie();
-            $serie ->setTitle("Serie ". $i);
+            $serie ->setTitle("Serie ". $i +1);
             $serie ->setShortDescription("Description de la Serie ". $i);
             $serie ->setLongDescription("Longue description de la Serie ". $i);
-            $serie ->setCoverImage("Serie". $i .".png");
+            $serie ->setCoverImage("https://picsum.photos/1920/1080?random={$i}");
             $serie ->setRealeaseDateAt(new \DateTime());
             $serie ->addCategoryMedium($categoryEntities[$i]);
             $serie->addMediaLanguage($languageEntities[$i]);
+            $serie->setCoverImage("https://picsum.photos/1920/1080?random={$i}");
+            $serie ->setCasting([
+                ['name' => 'Charlie Delta', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/150?u=Charlie+Delta'],
+                ['name' => 'Eve Fox', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/150?u=Eve+Fox'],
+                ['name' => 'Grace Hope', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/150?u=Grace+Hope'],
+                ['name' => 'Ivy Jack', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/150?u=Ivy+Jack'],
+                ]);
+            $serie ->setStaff([
+                ['name' => 'Alice Bob', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Alice+Bob'],
+                ['name' => 'Charlie Delta', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Charlie+Delta'],
+                ['name' => 'Eve Fox', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Eve+Fox'],
+                ['name' => 'Grace Hope', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Grace+Hope'],
+                ['name' => 'Ivy Jack', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Ivy+Jack'],
+            ]);
             $serie -> setMediaType(MediaTypeEnum::SERIE);
 
             for ( $s = 0; $s < 3; $s++) {
                 $season = new Season();
-                $season ->setSeasonNumber($s);
+                $season ->setSeasonNumber($s +1);
                 $season ->setSerie($serie);
 
                 for($e = 0 ; $e < 10; $e++){
                     $episode = new Episode();
-                    $episode ->setTitle("Episode". $e);
+                    $episode ->setTitle("Episode". $e +1);
                     $episode->setDuration(40); 
                     $episode->setReleaseDateAt(new \DateTimeImmutable());
                     $episode->setSeason($season);
-
+                    $episode->setEpisodeNumber($e +1);
+                    $episode->setEpisodeDescription("azfazefaze jfnabfiupzefba fyezzgg èofazuehufbazufiuzvfvay uvazefuazevfu abazef bazubfuiazbefiz az azeyfazueebf azbef fvazeufiv azuev");
+                    $episode->setEpisodeCoverImage("https://picsum.photos/300/300?random={$e}");
                     $season->addEpisode($episode);
                     $manager->persist($episode);
                 }
@@ -160,6 +191,7 @@ class AppFixtures extends Fixture
             $comment ->setMedia($movieTab[rand(0,4)]);
             $comment ->setContent("Commentaire du user ". $key);
             $comment ->setStatus(StatusCommentEnum::POSTED);
+            $comment ->setCreatedAt(new \DateTimeImmutable(""));
             $manager->persist($comment);
         }
 

@@ -40,6 +40,11 @@ class Comment
     #[ORM\Column(enumType: StatusCommentEnum::class)]
     private ?StatusCommentEnum $status = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -136,6 +141,18 @@ class Comment
     public function setStatus(StatusCommentEnum $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

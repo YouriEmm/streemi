@@ -8,5 +8,6 @@ enum StatusCommentEnum : string{
 
     case POSTED = 'posted';
     case DELETED = 'deleted';
+    case PENDING = 'pending';
 
 }

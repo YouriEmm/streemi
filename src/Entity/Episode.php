@@ -27,6 +27,15 @@ class Episode
     #[ORM\Column]
     private ?\DateTimeImmutable $releaseDateAt = null;
 
+    #[ORM\Column]
+    private ?int $episodeNumber = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $episodeDescription = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $episodeCoverImage = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +85,42 @@ class Episode
     public function setReleaseDateAt(\DateTimeImmutable $releaseDateAt): static
     {
         $this->releaseDateAt = $releaseDateAt;
+
+        return $this;
+    }
+
+    public function getEpisodeNumber(): ?int
+    {
+        return $this->episodeNumber;
+    }
+
+    public function setEpisodeNumber(int $episodeNumber): static
+    {
+        $this->episodeNumber = $episodeNumber;
+
+        return $this;
+    }
+
+    public function getEpisodeDescription(): ?string
+    {
+        return $this->episodeDescription;
+    }
+
+    public function setEpisodeDescription(string $episodeDescription): static
+    {
+        $this->episodeDescription = $episodeDescription;
+
+        return $this;
+    }
+
+    public function getEpisodeCoverImage(): ?string
+    {
+        return $this->episodeCoverImage;
+    }
+
+    public function setEpisodeCoverImage(string $episodeCoverImage): static
+    {
+        $this->episodeCoverImage = $episodeCoverImage;
 
         return $this;
     }
