@@ -12,12 +12,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MovieController extends AbstractController{
 
-    #[Route(path:"/discover")]
+    #[Route(path:"/discover", name:"discover")]
     public function discover(){
         return $this->render("discover.html.twig");
     }
 
-    #[Route(path:"category/{categoryName}")]
+    #[Route(path:"category/{categoryName}",)]
     public function category(){
         return $this->render("category.html.twig");
     }

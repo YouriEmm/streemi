@@ -15,6 +15,7 @@ use App\Entity\Language;
 use App\Entity\PlaylistMedia;
 use App\Entity\PlaylistSubscription;
 use App\Entity\Serie;
+use App\Entity\Subtitle;
 use App\Entity\WatchHistory;
 use App\Enum\MediaTypeEnum;
 use App\Enum\StatusCommentEnum;
@@ -63,6 +64,23 @@ class AppFixtures extends Fixture
             $languageEntities[] = $language;
         }
 
+        $subtitleEntities = [];
+
+        $subtitle = [
+            ['French', 0],
+            ['English', 1],
+            ['Spanish', 2],
+            ['Russian', 3],
+            ['Chinese', 4]
+        ];
+
+        foreach ($subtitle as $subtitleData) {
+            $subtitle = new Subtitle();
+            $subtitle->setName($subtitleData[0]);
+            $subtitle->setCode($subtitleData[1]);
+            $manager->persist($subtitle);
+            $subtitleEntities[] = $subtitle;
+        }
 
         $movieTab =[];
 
@@ -74,6 +92,7 @@ class AppFixtures extends Fixture
             $movie ->setCoverImage("film". $i .".png");
             $movie ->setRealeaseDateAt(new \DateTime());
             $movie ->setDuration(180);
+            $movie ->setRating(rand(1,10));
             $movie ->setMediaType(MediaTypeEnum::MOVIE);
             $movie ->setCoverImage("https://picsum.photos/1920/1080?random={$i}");
             $movie ->setCasting([
@@ -90,8 +109,14 @@ class AppFixtures extends Fixture
                 ['name' => 'Grace Hope', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Grace+Hope'],
                 ['name' => 'Ivy Jack', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Ivy+Jack'],
             ]);
+            $movie ->setTrailer([
+                ['platform'=> 'Youtube','link'=> '#'],
+                ['platform'=> 'Twitter','link'=> '#'],
+                ['platform'=> 'Allociné','link'=> '#'],
+            ]);
             $movie ->addCategoryMedium($categoryEntities[rand(0,4)]);
             $movie->addMediaLanguage($languageEntities[rand(0,4)]); 
+            $movie->addMediaSubtitle($subtitleEntities[rand(0,4)]);
             $movieTab[] = $movie;
             $manager->persist($movie);
         }
@@ -107,6 +132,8 @@ class AppFixtures extends Fixture
             $serie ->setRealeaseDateAt(new \DateTime());
             $serie ->addCategoryMedium($categoryEntities[rand(0,4)]);
             $serie->addMediaLanguage($languageEntities[rand(0,4)]);
+            $serie->addMediaSubtitle($subtitleEntities[rand(0,4)]);
+            $serie ->setRating(rand(1,10));
             $serie->setCoverImage("https://picsum.photos/1920/1080?random={$i}");
             $serie ->setCasting([
                 ['name' => 'Charlie Delta', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/150?u=Charlie+Delta'],
@@ -120,6 +147,11 @@ class AppFixtures extends Fixture
                 ['name' => 'Eve Fox', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Eve+Fox'],
                 ['name' => 'Grace Hope', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Grace+Hope'],
                 ['name' => 'Ivy Jack', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Ivy+Jack'],
+            ]);
+            $serie ->setTrailer([
+                ['platform'=> 'Youtube','link'=> '#'],
+                ['platform'=> 'Twitter','link'=> '#'],
+                ['platform'=> 'Allociné','link'=> '#'],
             ]);
             $serie -> setMediaType(MediaTypeEnum::SERIE);
 
@@ -188,16 +220,24 @@ class AppFixtures extends Fixture
             $manager->persist($subHistory);
         }
 
-        foreach($userTab as $key => $userTabData){
-            $comment = new Comment();
-            $comment ->setContributor($userTabData);
-            $comment ->setMedia($movieTab[rand(0,4)]);
-            $comment ->setMedia($serieTab[rand(0,4)]);
-            $comment ->setContent("Commentaire du user ". $key);
-            $comment ->setStatus(StatusCommentEnum::POSTED);
-            $comment ->setCreatedAt(new \DateTimeImmutable(""));
-            $manager->persist($comment);
+        foreach($userTab as $key => $userTabData) {
+            $commentMovie = new Comment();
+            $commentMovie->setContributor($userTabData);
+            $commentMovie->setMedia($movieTab[rand(0, count($movieTab) - 1)]); 
+            $commentMovie->setContent("Commentaire sur le film du user " . $key);
+            $commentMovie->setStatus(StatusCommentEnum::POSTED);
+            $commentMovie->setCreatedAt(new \DateTimeImmutable());
+            $manager->persist($commentMovie);
+        
+            $commentSerie = new Comment();
+            $commentSerie->setContributor($userTabData);
+            $commentSerie->setMedia($serieTab[rand(0, count($serieTab) - 1)]);
+            $commentSerie->setContent("Commentaire sur la série du user " . $key);
+            $commentSerie->setStatus(StatusCommentEnum::POSTED);
+            $commentSerie->setCreatedAt(new \DateTimeImmutable());
+            $manager->persist($commentSerie);
         }
+        
 
         foreach($userTab as $key => $userTabData){
             $watchHistory = new WatchHistory();

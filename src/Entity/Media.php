@@ -77,6 +77,19 @@ class Media
     #[ORM\ManyToMany(targetEntity: Language::class, inversedBy: 'media')]
     private Collection $mediaLanguages;
 
+
+    #[ORM\Column(nullable: true)]
+    private ?int $rating = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $trailer = null;
+
+    /**
+     * @var Collection<int, Subtitle>
+     */
+    #[ORM\ManyToMany(targetEntity: Subtitle::class, inversedBy: 'media')]
+    private Collection $mediaSubtitle;
+
     public function __construct()
     {
         $this->watchHistories = new ArrayCollection();
@@ -84,6 +97,7 @@ class Media
         $this->playlistMedia = new ArrayCollection();
         $this->categoryMedia = new ArrayCollection();
         $this->mediaLanguages = new ArrayCollection();
+        $this->mediaSubtitle = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -321,6 +335,54 @@ class Media
     public function removeMediaLanguage(Language $mediaLanguage): static
     {
         $this->mediaLanguages->removeElement($mediaLanguage);
+
+        return $this;
+    }
+
+    public function getRating(): ?int
+    {
+        return $this->rating;
+    }
+
+    public function setRating(?int $rating): static
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function getTrailer(): ?array
+    {
+        return $this->trailer;
+    }
+
+    public function setTrailer(?array $trailer): static
+    {
+        $this->trailer = $trailer;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subtitle>
+     */
+    public function getMediaSubtitle(): Collection
+    {
+        return $this->mediaSubtitle;
+    }
+
+    public function addMediaSubtitle(Subtitle $mediaSubtitle): static
+    {
+        if (!$this->mediaSubtitle->contains($mediaSubtitle)) {
+            $this->mediaSubtitle->add($mediaSubtitle);
+        }
+
+        return $this;
+    }
+
+    public function removeMediaSubtitle(Subtitle $mediaSubtitle): static
+    {
+        $this->mediaSubtitle->removeElement($mediaSubtitle);
 
         return $this;
     }
