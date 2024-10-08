@@ -66,7 +66,7 @@ class AppFixtures extends Fixture
 
         $movieTab =[];
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 1; $i < 6; $i++) {
             $movie = new Movie();
             $movie ->setTitle("Film ". $i);
             $movie ->setShortDescription("Description du film ". $i);
@@ -90,21 +90,23 @@ class AppFixtures extends Fixture
                 ['name' => 'Grace Hope', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Grace+Hope'],
                 ['name' => 'Ivy Jack', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/500/150?u=Ivy+Jack'],
             ]);
-            $movie ->addCategoryMedium($categoryEntities[$i]);
-            $movie->addMediaLanguage($languageEntities[$i]); 
+            $movie ->addCategoryMedium($categoryEntities[rand(0,4)]);
+            $movie->addMediaLanguage($languageEntities[rand(0,4)]); 
             $movieTab[] = $movie;
             $manager->persist($movie);
         }
 
-        for ($i = 0; $i < 5; $i++) {
+        $serieTab = [];
+
+        for ($i = 1; $i < 6; $i++) {
             $serie = new Serie();
-            $serie ->setTitle("Serie ". $i +1);
+            $serie ->setTitle("Serie ". $i);
             $serie ->setShortDescription("Description de la Serie ". $i);
             $serie ->setLongDescription("Longue description de la Serie ". $i);
             $serie ->setCoverImage("https://picsum.photos/1920/1080?random={$i}");
             $serie ->setRealeaseDateAt(new \DateTime());
-            $serie ->addCategoryMedium($categoryEntities[$i]);
-            $serie->addMediaLanguage($languageEntities[$i]);
+            $serie ->addCategoryMedium($categoryEntities[rand(0,4)]);
+            $serie->addMediaLanguage($languageEntities[rand(0,4)]);
             $serie->setCoverImage("https://picsum.photos/1920/1080?random={$i}");
             $serie ->setCasting([
                 ['name' => 'Charlie Delta', 'role' => 'Acteur', 'image' => 'https://i.pravatar.cc/150?u=Charlie+Delta'],
@@ -121,18 +123,18 @@ class AppFixtures extends Fixture
             ]);
             $serie -> setMediaType(MediaTypeEnum::SERIE);
 
-            for ( $s = 0; $s < 3; $s++) {
+            for ( $s = 1; $s < 4; $s++) {
                 $season = new Season();
-                $season ->setSeasonNumber($s +1);
+                $season ->setSeasonNumber($s);
                 $season ->setSerie($serie);
 
-                for($e = 0 ; $e < 10; $e++){
+                for($e = 1 ; $e < 11; $e++){
                     $episode = new Episode();
-                    $episode ->setTitle("Episode". $e +1);
+                    $episode ->setTitle("Episode". $e);
                     $episode->setDuration(40); 
                     $episode->setReleaseDateAt(new \DateTimeImmutable());
                     $episode->setSeason($season);
-                    $episode->setEpisodeNumber($e +1);
+                    $episode->setEpisodeNumber($e);
                     $episode->setEpisodeDescription("azfazefaze jfnabfiupzefba fyezzgg èofazuehufbazufiuzvfvay uvazefuazevfu abazef bazubfuiazbefiz az azeyfazueebf azbef fvazeufiv azuev");
                     $episode->setEpisodeCoverImage("https://picsum.photos/300/300?random={$e}");
                     $season->addEpisode($episode);
@@ -142,6 +144,7 @@ class AppFixtures extends Fixture
                 $serie->addSeason($season);
                 $manager->persist($season);
             }
+            $serieTab[] = $serie;
             $manager->persist($serie);
         }
 
@@ -189,6 +192,7 @@ class AppFixtures extends Fixture
             $comment = new Comment();
             $comment ->setContributor($userTabData);
             $comment ->setMedia($movieTab[rand(0,4)]);
+            $comment ->setMedia($serieTab[rand(0,4)]);
             $comment ->setContent("Commentaire du user ". $key);
             $comment ->setStatus(StatusCommentEnum::POSTED);
             $comment ->setCreatedAt(new \DateTimeImmutable(""));
