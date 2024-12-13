@@ -4,6 +4,10 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
+        users:
+            entity:
+                class: 'App\Entity\User'
+                property: 'email'
         users_in_memory: { memory: null }
     firewalls:
         dev:
@@ -32,6 +36,11 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER]
+        ROLE_USER: []
+        ROLE_BANNED: []
 
 when@test:
     security:
