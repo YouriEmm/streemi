@@ -22,9 +22,19 @@ use App\Enum\StatusCommentEnum;
 use App\Enum\UserAccountStatusEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher){
+
+        $this -> passwordHasher = $passwordHasher;
+
+    }
+
     public function load(ObjectManager $manager): void
     {
 
@@ -201,22 +211,34 @@ class AppFixtures extends Fixture
         $userTab = [];
 
         for ($i = 0; $i < 5; $i++) {
-            $user = new User() ;
-            $user ->setUsername("User" . $i);
-            $user ->setEmail("blabla".$i."@example.com");
-            $user ->setPassword("mdp");
-            $user ->addCurrentSubscription($subscriptionsEntities[rand(0,2)]);
+            $user = new User();
+            $user->setUsername("User" . $i);
+            $user->setEmail("user{$i}@example.com");
+
+            $hashedPassword = $this->passwordHasher->hashPassword($user, 'mdp');
+            $user->setPassword($hashedPassword);
+
+            if ($i === 0) {
+                $user->setRoles(['ROLE_ADMIN']);
+            } elseif ($i === 4) {
+                $user->setRoles(['ROLE_BANNED']);
+            } else {
+                $user->setRoles(['ROLE_USER']);
+            }
+
+            $user->addCurrentSubscription($subscriptionsEntities[rand(0, 2)]);
             $user->setAccountStatus(UserAccountStatusEnum::ACTIVE);
+
             $userTab[] = $user;
             $manager->persist($user);
         }
-        
+
         foreach ($userTab as $userTabData) {
             $subHistory = new SubscriptionHistory();
-            $subHistory ->setSubscriber($userTabData);
-            $subHistory ->setSubscription($subscriptionsEntities[rand(0,2)]);
-            $subHistory ->setStartDateAt(new \DateTimeImmutable(""));
-            $subHistory->setEndDateAt(new \DateTimeImmutable(""));
+            $subHistory->setSubscriber($userTabData);
+            $subHistory->setSubscription($subscriptionsEntities[rand(0, 2)]);
+            $subHistory->setStartDateAt(new \DateTimeImmutable());
+            $subHistory->setEndDateAt(new \DateTimeImmutable());
             $manager->persist($subHistory);
         }
 
