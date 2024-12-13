@@ -16,7 +16,7 @@ class UserController extends AbstractController{
         return $this->render("");
     }
 
-    #[Route(path:"user/myList")]
+    #[Route(path:"user/myList",name: "myList" )]
     public function myList(){
         return $this->render("lists.html.twig");
     }
